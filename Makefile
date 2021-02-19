@@ -14,3 +14,6 @@ lint:
 vet:
 	@echo "Checking for code issues"
 	go vet ./...
+
+run:
+	 go run cmd/main.go

@@ -10,7 +10,20 @@ services:
     volumes:
       - redis:/data/
 
+  mongo:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
 volumes:
   redis:
+  mongo:
 
 
