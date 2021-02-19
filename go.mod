@@ -3,6 +3,7 @@ module github.com/Akshit8/url-shortner
 go 1.15
 
 require (
+	github.com/go-chi/chi v1.5.2
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.5.0
 	github.com/pkg/errors v0.9.1
