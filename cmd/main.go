@@ -34,7 +34,7 @@ func main() {
 	errs := make(chan error, 2)
 	go func() {
 		address := httpAddress()
-		fmt.Printf("server listening on %s", address)
+		fmt.Printf("server listening on %s\n", address)
 		errs <- http.ListenAndServe(address, r)
 	}()
 
@@ -44,7 +44,7 @@ func main() {
 		errs <- fmt.Errorf("interupted: %s", <-c)
 	}()
 
-	fmt.Printf("Terminated %s", <-errs)
+	fmt.Printf("Terminated %s\n", <-errs)
 }
 
 func httpAddress() string {

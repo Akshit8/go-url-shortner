@@ -54,7 +54,7 @@ func (r *redisRepository) Find(code string) (*url.Redirect, error) {
 	if len(data) == 0 {
 		return nil, errs.Wrap(url.ErrRedirectNotFound, "repository.Redirect.Find")
 	}
-	createdAt, err := time.Parse(time.UnixDate, data["created_at"])
+	createdAt, err := time.Parse(time.RFC3339, data["created_at"])
 	if err != nil {
 		return nil, errs.Wrap(err, "repository.Redirect.Find")
 	}

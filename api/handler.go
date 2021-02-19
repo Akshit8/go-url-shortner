@@ -52,6 +52,7 @@ func (h *handler) RedirectURL(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 	http.Redirect(w, req, redirect.URL, http.StatusMovedPermanently)
@@ -62,12 +63,14 @@ func (h *handler) CreateShortURL(w http.ResponseWriter, req *http.Request) {
 	requestBody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 
 	redirect, err := h.serializer(contentType).Decode(requestBody)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 
@@ -78,12 +81,14 @@ func (h *handler) CreateShortURL(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 
 	responseBody, err := h.serializer(contentType).Encode(redirect)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 	setupResponse(w, contentType, responseBody, http.StatusCreated)
