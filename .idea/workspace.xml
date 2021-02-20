@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07727eea-b82e-41ef-a805-ed4f1b05cfd6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/redirect/redirect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/redirect/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/redirect/service.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/url/model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/url/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/url/serializer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/url/service.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/url/url.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/serializer/json/serializer.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
