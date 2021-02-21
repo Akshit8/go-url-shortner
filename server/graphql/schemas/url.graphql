@@ -1,0 +1,26 @@
+type Url {
+    code: String!
+    url: String!
+    shortUrl: String!
+}
+
+input CreateUrl {
+    url: String!
+}
+
+input UpdateUrl {
+    code: String
+    url: String
+    shortUrl: String
+}
+
+type Query {
+    GetURLById(code: String!): Url!
+    GetAllURL(limit: Int=10, offset: Int=0): [Url!]!
+}
+
+type Mutation {
+    CreateURL(input: CreateUrl!): Url!
+    UpdateURL(code: String!, input: UpdateUrl!): Url!
+    DeleteURL(code: String!): Boolean!
+}

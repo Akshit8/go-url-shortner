@@ -15,5 +15,8 @@ vet:
 	@echo "Checking for code issues"
 	go vet ./...
 
+graphql:
+	go run github.com/99designs/gqlgen generate
+
 run:
 	 go run cmd/main.go

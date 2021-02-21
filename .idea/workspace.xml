@@ -2,21 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07727eea-b82e-41ef-a805-ed4f1b05cfd6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/repository/mongo/mongo.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/repository/mongo/redirect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/repository/mongo/url.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/repository/redis/redirect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/repository/redis/redis.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/repository/redis/url.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/serializer/msgpack/serializer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/rest/error/error.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/rest/handler/redirect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/rest/handler/url.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/rest/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gqlgen.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/generated/generated.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/model/models.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/resolver/resolver.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/resolver/url.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/schemas/url.graphql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/graphql/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/redirect/redirect.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/redirect/redirect.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/redirect/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/redirect/repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/redirect/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/redirect/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go File" />
+        <option value="GraphQL File" />
       </list>
     </option>
   </component>
