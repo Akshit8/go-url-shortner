@@ -1,4 +1,4 @@
-package main
+package graphql
 
 import (
 	"log"
@@ -22,5 +22,6 @@ func StartGraphqlServer(urlService url.Service, address string) {
 	http.Handle("/query", srv)
 
 	log.Printf("connect to http://%s/ for GraphQL playground", address)
+	log.Printf("starting graphql server on address: %s", address)
 	log.Fatal(http.ListenAndServe(address, nil))
 }

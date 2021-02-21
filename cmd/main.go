@@ -3,78 +3,53 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/Akshit8/url-shortner/api"
-	"github.com/Akshit8/url-shortner/repository/mongo"
-	"github.com/Akshit8/url-shortner/repository/redis"
-	"github.com/Akshit8/url-shortner/url"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/Akshit8/url-shortner/pkg/redirect"
+	"github.com/Akshit8/url-shortner/pkg/repository/mongo"
+	"github.com/Akshit8/url-shortner/pkg/repository/redis"
+	"github.com/Akshit8/url-shortner/pkg/url"
+	"github.com/Akshit8/url-shortner/server/graphql"
+	"github.com/Akshit8/url-shortner/server/rest"
 )
 
 func main() {
-	repo := repoSelector()
-	service := url.NewRedirectService(repo)
-	handler := api.NewHandler(service)
+	urlRepository, redirectRepository := repoInitializer()
+	urlService := url.NewURLService(urlRepository)
+	redirectService := redirect.NewRedirectService(redirectRepository)
 
-	r := chi.NewRouter()
+	go rest.StartRestServer(urlService, redirectService, "0.0.0.0:8080")
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	go graphql.StartGraphqlServer(urlService, "0.0.0.0:8081")
 
-	r.Get("/{code}", handler.RedirectURL)
-	r.Post("/", handler.CreateShortURL)
-
-	errs := make(chan error, 2)
-	go func() {
-		address := httpAddress()
-		fmt.Printf("server listening on %s\n", address)
-		errs <- http.ListenAndServe(address, r)
-	}()
-
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, syscall.SIGINT)
-		errs <- fmt.Errorf("interupted: %s", <-c)
-	}()
-
-	fmt.Printf("Terminated %s\n", <-errs)
+	fmt.Scanln()
 }
 
-func httpAddress() string {
-	port := "8000"
-	if os.Getenv("PORT") != "" {
-		port = os.Getenv("PORT")
-	}
-	return fmt.Sprintf("0.0.0.0:%s", port)
-}
-
-func repoSelector() url.RedirectRepository {
+func repoInitializer() (url.Repository, redirect.Repository) {
 	switch os.Getenv("DB") {
 	case "redis":
 		redisURI := os.Getenv("REDIS_URI")
-		repo, err := redis.NewRedisRepository(redisURI)
+		client, err := redis.NewClient(redisURI)
 		if err != nil {
 			log.Fatal(err)
 		}
-		return repo
+		urlRepository := redis.NewURLRepository(client)
+		redirectRepository := redis.NewRedirectRepository(client)
+		return urlRepository, redirectRepository
 	case "mongo":
 		mongoURI := os.Getenv("MONGO_URI")
 		database := os.Getenv("DB_NAME")
+		urlCollection := os.Getenv("URL_COLLECTION")
 		timeout := 10
-		repo, err := mongo.NewMongoRepository(mongoURI, database, timeout)
+		client, err := mongo.NewClient(mongoURI, timeout)
 		if err != nil {
 			log.Fatal(err)
 		}
-		return repo
+		urlRepository := mongo.NewURLRepository(client, database, urlCollection)
+		redirectRepository := mongo.NewRedirectRepository(client, database, urlCollection)
+		return urlRepository, redirectRepository
 	default:
-		log.Println("please select any available databse")
+		log.Println("please select any available database")
 	}
-	return nil
+	return nil, nil
 }

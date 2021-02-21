@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -24,6 +24,8 @@ func StartRestServer(urlService url.Service, redirectService redirect.Service, a
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	r.Get("/health", healthHandler)
+
 	r.Get("/{code}", redirectHandler.RedirectURL)
 
 	r.Route("/api/v1", func(r chi.Router) {
@@ -34,6 +36,23 @@ func StartRestServer(urlService url.Service, redirectService redirect.Service, a
 		r.Delete("/url/{code}", urlHandler.DeleteURL)
 	})
 
-	fmt.Printf("starting rest server on address: %s", address)
+	log.Printf("starting rest server on address: %s", address)
 	log.Fatal(http.ListenAndServe(address, r))
+}
+
+type healthResponse struct {
+	StatusCode int    `json:"statusCode"`
+	Message    string `json:"message"`
+}
+
+func healthHandler(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(200)
+	response := &healthResponse{
+		StatusCode: 200,
+		Message:    "Rest service is working",
+	}
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println("healthHandler.Encode: ", err)
+	}
 }
