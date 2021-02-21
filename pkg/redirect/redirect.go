@@ -1,7 +1,5 @@
 package redirect
 
-import "github.com/Akshit8/url-shortner/pkg/url"
-
 type redirectService struct {
 	redirectRepository Repository
 }
@@ -11,6 +9,6 @@ func NewRedirectService(redirectRepository Repository) Service {
 	return &redirectService{redirectRepository: redirectRepository}
 }
 
-func (r *redirectService) Find(code string) (*url.URL, error) {
-	return nil, nil
+func (r *redirectService) Find(code string) (string, error) {
+	return "", nil
 }

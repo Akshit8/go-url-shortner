@@ -6,11 +6,11 @@ import (
 	"github.com/vmihailenco/msgpack"
 )
 
-// Redirect struct
-type Redirect struct{}
+// Serializer binds encode-decode methods
+type Serializer struct{}
 
 // Decode decodes byte array to json
-func (r *Redirect) Decode(input []byte) (*url.Redirect, error) {
+func (s *Serializer) Decode(input []byte) (*url.Redirect, error) {
 	redirect := &url.Redirect{}
 	if err := msgpack.Unmarshal(input, redirect); err != nil {
 		return nil, errs.Wrap(err, "serializer.Redirect.Decode")
@@ -19,7 +19,7 @@ func (r *Redirect) Decode(input []byte) (*url.Redirect, error) {
 }
 
 // Encode encodes a go struct to byte array
-func (r *Redirect) Encode(input *url.Redirect) ([]byte, error) {
+func (s *Serializer) Encode(input *url.Redirect) ([]byte, error) {
 	rawMsg, err := msgpack.Marshal(input)
 	if err != nil {
 		return nil, errs.Wrap(err, "serializer.Redirect.Encode")
