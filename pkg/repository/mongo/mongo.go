@@ -12,7 +12,7 @@ import (
 // client struct defines client for mongodb
 type client struct{}
 
-// NewClient creates a new instance of Client
+// NewClient creates a new instance of client and return mongo client
 func NewClient(mongoURI string, timeout int) (*mongo.Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 	defer cancel()

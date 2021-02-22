@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+
+	"github.com/Akshit8/url-shortner/pkg/repository/cassandra"
 
 	"github.com/Akshit8/url-shortner/pkg/redirect"
 	"github.com/Akshit8/url-shortner/pkg/repository/mongo"
@@ -31,11 +34,12 @@ func repoInitializer() (url.Repository, redirect.Repository) {
 		redisURI := os.Getenv("REDIS_URI")
 		client, err := redis.NewClient(redisURI)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln("error creating redis client: ", err)
 		}
 		urlRepository := redis.NewURLRepository(client)
 		redirectRepository := redis.NewRedirectRepository(client)
 		return urlRepository, redirectRepository
+
 	case "mongo":
 		mongoURI := os.Getenv("MONGO_URI")
 		database := os.Getenv("DB_NAME")
@@ -43,13 +47,30 @@ func repoInitializer() (url.Repository, redirect.Repository) {
 		timeout := 10
 		client, err := mongo.NewClient(mongoURI, timeout)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln("error creating mongo client: ", err)
 		}
 		urlRepository := mongo.NewURLRepository(client, database, urlCollection)
 		redirectRepository := mongo.NewRedirectRepository(client, database, urlCollection)
 		return urlRepository, redirectRepository
+
+	case "cassandra":
+		cassandraHost := os.Getenv("CASSANDRA_HOST")
+		cassandraPort, err := strconv.Atoi(os.Getenv("CASSANDRA_PORT"))
+		if err != nil {
+			log.Fatalln("error parsing cassandra port: ", err)
+		}
+		urlTable := os.Getenv("URL_TABLE")
+		session, err := cassandra.NewClient(cassandraHost, cassandraPort, urlTable)
+		if err != nil {
+			log.Fatalln("error creating cassandra client: ", err)
+		}
+		urlRepository := cassandra.NewURLRepository(session, urlTable)
+		redirectRepository := cassandra.NewRedirectRepository(session, urlTable)
+		return urlRepository, redirectRepository
+
 	default:
 		log.Println("please select any available database")
 	}
+
 	return nil, nil
 }

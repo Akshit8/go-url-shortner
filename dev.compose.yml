@@ -22,8 +22,18 @@ services:
     volumes:
       - mongo:/data/db
 
+  cassandra:
+    image: cassandra:3
+    container_name: cassandradb
+    restart: unless-stopped
+    ports:
+      - 9042:9042
+    volumes:
+    - cassandra:/var/lib/cassandra
+
 volumes:
   redis:
   mongo:
+  cassandra:
 
 

@@ -9,7 +9,7 @@ import (
 // client struct defines client for redis db
 type client struct{}
 
-// NewClient creates instance of client
+// NewClient creates instance of client and returns a redis client
 func NewClient(redisURI string) (*redis.Client, error) {
 	options, err := redis.ParseURL(redisURI)
 	if err != nil {
