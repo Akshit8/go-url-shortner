@@ -1,4 +1,4 @@
-package url
+package urls
 
 // Serializer defines methods available for url serializer
 type Serializer interface {

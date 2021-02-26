@@ -2,7 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/Akshit8/url-shortner/pkg/urls"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/Akshit8/url-shortner/server/graphql"
 
 	"github.com/Akshit8/url-shortner/cmd/config"
 	"github.com/Akshit8/url-shortner/pkg/repository/cassandra"
@@ -11,7 +18,6 @@ import (
 	"github.com/Akshit8/url-shortner/pkg/repository/mongo"
 	"github.com/Akshit8/url-shortner/pkg/repository/redis"
 	"github.com/Akshit8/url-shortner/pkg/url"
-	"github.com/Akshit8/url-shortner/server/graphql"
 	"github.com/Akshit8/url-shortner/server/rest"
 )
 
@@ -20,25 +26,43 @@ func main() {
 	if err != nil {
 		log.Fatalln("error loading config: ", err)
 	}
-	fmt.Println(appConfig)
-	fmt.Println("a")
+
 	urlRepository, redirectRepository := repoSelector(appConfig)
-	fmt.Println("b")
-	urlService := url.NewURLService(urlRepository)
+
+	urlService := urls.NewURLService(urlRepository)
 	redirectService := redirect.NewRedirectService(redirectRepository)
 
-	go rest.StartRestServer(urlService, redirectService, getListeningAddress(appConfig.Host, appConfig.RestPort))
+	restServer := rest.NewRestServer(urlService, redirectService)
+	graphqlServer := graphql.NewGraphqlServer(urlService)
 
-	go graphql.StartGraphqlServer(urlService, getListeningAddress(appConfig.Host, appConfig.GraphqlPort))
+	errs := make(chan error, 3)
 
-	fmt.Scanln()
+	go func() {
+		restAddress := getListeningAddress(appConfig.Host, appConfig.RestPort)
+		log.Println("starting rest server on address:", restAddress)
+		errs <- http.ListenAndServe(restAddress, restServer)
+	}()
+
+	go func() {
+		graphqlAddress := getListeningAddress(appConfig.Host, appConfig.GraphqlPort)
+		log.Println("starting graphql server on address:", graphqlAddress)
+		errs <- http.ListenAndServe(graphqlAddress, graphqlServer)
+	}()
+
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT)
+		errs <- fmt.Errorf("%s", <-c)
+	}()
+
+	fmt.Printf("Terminated: %s", <-errs)
 }
 
 func getListeningAddress(host string, port int) string {
 	return fmt.Sprintf("%s:%d", host, port)
 }
 
-func repoSelector(config config.AppConfig) (url.Repository, redirect.Repository) {
+func repoSelector(config config.AppConfig) (urls.Repository, redirect.Repository) {
 	urlTable := config.URLTable
 	switch config.RepoType {
 	case "redis":

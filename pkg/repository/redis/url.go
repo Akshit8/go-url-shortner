@@ -10,14 +10,14 @@ type urlRepository struct {
 }
 
 // NewURLRepository creates new instance of urlRepository
-func NewURLRepository(client *redis.Client) url.Repository {
+func NewURLRepository(client *redis.Client) urls.Repository {
 	return &urlRepository{client: client}
 }
 
-func (u *urlRepository) Save(url *url.URL) (*url.URL, error) {
+func (u *urlRepository) Save(url *urls.URL) (*urls.URL, error) {
 	return nil, nil
 }
 
-func (u *urlRepository) Get(code string) (*url.URL, error) {
+func (u *urlRepository) Get(code string) (*urls.URL, error) {
 	return nil, nil
 }

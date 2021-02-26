@@ -1,4 +1,10 @@
-package url
+package urls
+
+// Service defines available actions on url
+type Service interface {
+	Save(url *URL) (*URL, error)
+	Get(code string) (*URL, error)
+}
 
 type urlService struct {
 	urlRepository Repository
@@ -10,9 +16,9 @@ func NewURLService(urlRepo Repository) Service {
 }
 
 func (u *urlService) Save(url *URL) (*URL, error) {
-	return nil, nil
+	return u.urlRepository.Save(url)
 }
 
 func (u *urlService) Get(code string) (*URL, error) {
-	return nil, nil
+	return u.urlRepository.Get(code)
 }

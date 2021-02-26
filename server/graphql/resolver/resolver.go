@@ -7,5 +7,5 @@ import "github.com/Akshit8/url-shortner/pkg/url"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	UrlService url.Service
+	UrlService urls.Service
 }

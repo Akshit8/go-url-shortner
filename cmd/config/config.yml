@@ -2,7 +2,7 @@ REST_PORT: 8000
 GRAPHQL_PORT: 8001
 HOST: 0.0.0.0
 
-REPO_TYPE: mongodb
+REPO_TYPE: monasgodb
 DB_NAME: urlshortner
 URL_TABLE: url
 

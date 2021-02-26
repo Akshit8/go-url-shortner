@@ -11,8 +11,8 @@ import (
 type Serializer struct{}
 
 // Decode decodes byte array to json
-func (s *Serializer) Decode(input []byte) (*url.URL, error) {
-	redirect := &url.URL{}
+func (s *Serializer) Decode(input []byte) (*urls.URL, error) {
+	redirect := &urls.URL{}
 	if err := json.Unmarshal(input, redirect); err != nil {
 		return nil, errs.Wrap(err, "serializer.json.Decode")
 	}
@@ -20,7 +20,7 @@ func (s *Serializer) Decode(input []byte) (*url.URL, error) {
 }
 
 // Encode encodes a go struct to byte array
-func (s *Serializer) Encode(input *url.URL) ([]byte, error) {
+func (s *Serializer) Encode(input *urls.URL) ([]byte, error) {
 	rawMsg, err := json.Marshal(input)
 	if err != nil {
 		return nil, errs.Wrap(err, "serializer.json.Encode")

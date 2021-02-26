@@ -13,7 +13,7 @@ import (
 )
 
 // StartRestServer starts a http server(REST) on given address and service
-func StartRestServer(urlService url.Service, redirectService redirect.Service, address string) {
+func NewRestServer(urlService urls.Service, redirectService redirect.Service) *chi.Mux {
 	urlHandler := handler.NewURLHandler(urlService)
 	redirectHandler := handler.NewRedirectHandler(redirectService)
 
@@ -30,14 +30,10 @@ func StartRestServer(urlService url.Service, redirectService redirect.Service, a
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Post("/url", urlHandler.CreateURL)
-		r.Get("/url/{code}", urlHandler.GetURLById)
-		r.Get("/url", urlHandler.GetAllURL)
-		r.Put("/url/{code}", urlHandler.UpdateURL)
-		r.Delete("/url/{code}", urlHandler.DeleteURL)
+		r.Get("/url/{code}", urlHandler.GetURLByID)
 	})
 
-	log.Printf("starting rest server on address: %s", address)
-	log.Fatal(http.ListenAndServe(address, r))
+	return r
 }
 
 type healthResponse struct {

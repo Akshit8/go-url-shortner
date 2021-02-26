@@ -1,7 +1,6 @@
 package graphql
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -12,16 +11,16 @@ import (
 )
 
 // StartGraphqlServer starts a Graphql server on given address and service
-func StartGraphqlServer(urlService url.Service, address string) {
+func NewGraphqlServer(urlService urls.Service) *http.ServeMux {
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolver.Resolver{
 		UrlService: urlService,
 	}}))
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	r := http.NewServeMux()
 
-	log.Printf("connect to http://%s/ for GraphQL playground", address)
-	log.Printf("starting graphql server on address: %s", address)
-	log.Fatal(http.ListenAndServe(address, nil))
+	r.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	r.Handle("/query", srv)
+
+	return r
 }

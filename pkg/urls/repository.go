@@ -1,4 +1,4 @@
-package url
+package urls
 
 // Repository defines storage interface for url
 type Repository interface {

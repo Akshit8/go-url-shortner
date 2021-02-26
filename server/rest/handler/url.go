@@ -13,11 +13,11 @@ type URLHandler interface {
 }
 
 type urlHandler struct {
-	urlService url.Service
+	urlService urls.Service
 }
 
 // NewURLHandler creates new instance of urlHandler
-func NewURLHandler(urlService url.Service) URLHandler {
+func NewURLHandler(urlService urls.Service) URLHandler {
 	return &urlHandler{urlService: urlService}
 }
 
