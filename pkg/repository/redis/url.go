@@ -21,15 +21,3 @@ func (u *urlRepository) Save(url *url.URL) (*url.URL, error) {
 func (u *urlRepository) Get(code string) (*url.URL, error) {
 	return nil, nil
 }
-
-func (u *urlRepository) GetAll() ([]*url.URL, error) {
-	return nil, nil
-}
-
-func (u *urlRepository) Update(code string, url *url.URL) (*url.URL, error) {
-	return nil, nil
-}
-
-func (u *urlRepository) Delete(code string) error {
-	return nil
-}

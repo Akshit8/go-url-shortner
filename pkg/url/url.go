@@ -16,15 +16,3 @@ func (u *urlService) Save(url *URL) (*URL, error) {
 func (u *urlService) Get(code string) (*URL, error) {
 	return nil, nil
 }
-
-func (u *urlService) GetAll() ([]*URL, error) {
-	return nil, nil
-}
-
-func (u *urlService) Update(code string, url *URL) (*URL, error) {
-	return nil, nil
-}
-
-func (u *urlService) Delete(code string) error {
-	return nil
-}
