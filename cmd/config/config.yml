@@ -1,7 +1,12 @@
-PORT: 8000
-DB: mongo
+REST_PORT: 8000
+GRAPHQL_PORT: 8001
+HOST: 0.0.0.0
+
+REPO_TYPE: mongodb
 DB_NAME: urlshortner
+URL_TABLE: url
 
 REDIS_URI: redis://localhost:6379
-
 MONGO_URI: mongodb://root:rootpassword@localhost:27017
+CASSANDRA_HOST: localhost
+CASSANDRA_PORT: 9042

@@ -9,6 +9,7 @@ require (
 	github.com/go-redis/redis/v8 v8.5.0
 	github.com/gocql/gocql v0.0.0-20210129204804-4364a4b9cfdd
 	github.com/pkg/errors v0.9.1
+	github.com/spf13/viper v1.7.1
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125
 	github.com/vektah/gqlparser/v2 v2.1.0
 	github.com/vmihailenco/msgpack v4.0.4+incompatible

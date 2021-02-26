@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 
+	"github.com/Akshit8/url-shortner/cmd/config"
 	"github.com/Akshit8/url-shortner/pkg/repository/cassandra"
 
 	"github.com/Akshit8/url-shortner/pkg/redirect"
@@ -17,22 +16,33 @@ import (
 )
 
 func main() {
-	urlRepository, redirectRepository := repoInitializer()
+	appConfig, err := config.LoadConfig("cmd/config")
+	if err != nil {
+		log.Fatalln("error loading config: ", err)
+	}
+	fmt.Println(appConfig)
+	fmt.Println("a")
+	urlRepository, redirectRepository := repoSelector(appConfig)
+	fmt.Println("b")
 	urlService := url.NewURLService(urlRepository)
 	redirectService := redirect.NewRedirectService(redirectRepository)
 
-	go rest.StartRestServer(urlService, redirectService, "0.0.0.0:8080")
+	go rest.StartRestServer(urlService, redirectService, getListeningAddress(appConfig.Host, appConfig.RestPort))
 
-	go graphql.StartGraphqlServer(urlService, "0.0.0.0:8081")
+	go graphql.StartGraphqlServer(urlService, getListeningAddress(appConfig.Host, appConfig.GraphqlPort))
 
 	fmt.Scanln()
 }
 
-func repoInitializer() (url.Repository, redirect.Repository) {
-	switch os.Getenv("DB") {
+func getListeningAddress(host string, port int) string {
+	return fmt.Sprintf("%s:%d", host, port)
+}
+
+func repoSelector(config config.AppConfig) (url.Repository, redirect.Repository) {
+	urlTable := config.URLTable
+	switch config.RepoType {
 	case "redis":
-		redisURI := os.Getenv("REDIS_URI")
-		client, err := redis.NewClient(redisURI)
+		client, err := redis.NewClient(config.RedisURI)
 		if err != nil {
 			log.Fatalln("error creating redis client: ", err)
 		}
@@ -40,27 +50,18 @@ func repoInitializer() (url.Repository, redirect.Repository) {
 		redirectRepository := redis.NewRedirectRepository(client)
 		return urlRepository, redirectRepository
 
-	case "mongo":
-		mongoURI := os.Getenv("MONGO_URI")
-		database := os.Getenv("DB_NAME")
-		urlCollection := os.Getenv("URL_COLLECTION")
+	case "mongodb":
 		timeout := 10
-		client, err := mongo.NewClient(mongoURI, timeout)
+		client, err := mongo.NewClient(config.MongoURI, timeout)
 		if err != nil {
 			log.Fatalln("error creating mongo client: ", err)
 		}
-		urlRepository := mongo.NewURLRepository(client, database, urlCollection)
-		redirectRepository := mongo.NewRedirectRepository(client, database, urlCollection)
+		urlRepository := mongo.NewURLRepository(client, config.DbName, urlTable)
+		redirectRepository := mongo.NewRedirectRepository(client, config.DbName, urlTable)
 		return urlRepository, redirectRepository
 
 	case "cassandra":
-		cassandraHost := os.Getenv("CASSANDRA_HOST")
-		cassandraPort, err := strconv.Atoi(os.Getenv("CASSANDRA_PORT"))
-		if err != nil {
-			log.Fatalln("error parsing cassandra port: ", err)
-		}
-		urlTable := os.Getenv("URL_TABLE")
-		session, err := cassandra.NewClient(cassandraHost, cassandraPort, urlTable)
+		session, err := cassandra.NewClient(config.CassandraHost, config.CassandraPort, urlTable)
 		if err != nil {
 			log.Fatalln("error creating cassandra client: ", err)
 		}
@@ -69,7 +70,7 @@ func repoInitializer() (url.Repository, redirect.Repository) {
 		return urlRepository, redirectRepository
 
 	default:
-		log.Println("please select any available database")
+		log.Fatalln("please select a valid repostory")
 	}
 
 	return nil, nil
